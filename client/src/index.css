@@ -177,6 +177,9 @@
     @apply font-sans antialiased bg-background text-foreground;
     font-feature-settings: 'ss01', 'cv11';
   }
+  section[id] {
+    scroll-margin-top: 82px;
+  }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
@@ -399,6 +402,88 @@
     opacity: 1;
   }
 
+  .demo-grid {
+    background-image:
+      linear-gradient(to right, hsl(var(--background) / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--background) / 0.08) 1px, transparent 1px),
+      radial-gradient(circle at 20% 25%, hsl(var(--primary) / 0.16), transparent 28rem);
+    background-size: 42px 42px, 42px 42px, 100% 100%;
+    animation: demo-grid-drift 22s linear infinite;
+  }
+
+  .demo-shell {
+    box-shadow:
+      0 28px 80px hsl(0 0% 0% / 0.34),
+      inset 0 1px 0 hsl(var(--background) / 0.08);
+  }
+
+  .demo-step-button {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .demo-step-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, hsl(var(--background) / 0.12), transparent);
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+
+  .demo-step-button:hover::after,
+  .demo-step-button[aria-pressed="true"]::after {
+    opacity: 1;
+    animation: demo-step-sheen 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .demo-panel-swap {
+    animation: demo-panel-swap 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .metric-flip {
+    animation: metric-flip 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    transform-origin: 50% 100%;
+  }
+
+  .demo-led {
+    animation: demo-led-on 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.36);
+  }
+
+  .demo-route-line {
+    position: relative;
+    height: 72px;
+    border-left: 1px solid hsl(var(--background) / 0.2);
+    margin-left: 15px;
+  }
+
+  .demo-route-line::before,
+  .demo-route-line::after {
+    content: "";
+    position: absolute;
+    left: -4px;
+    height: 8px;
+    width: 8px;
+    background: hsl(var(--primary));
+  }
+
+  .demo-route-line::before {
+    top: 0;
+  }
+
+  .demo-route-line::after {
+    bottom: 0;
+  }
+
+  .demo-route-line {
+    background: linear-gradient(to bottom, hsl(var(--primary)) 0 45%, transparent 45% 100%);
+    background-size: 1px 18px;
+    background-repeat: repeat-y;
+    background-position: 0 0;
+    animation: route-flow 1.2s linear infinite;
+  }
+
   @supports (animation-timeline: view()) {
     .reveal-fade {
       opacity: 0.12;
@@ -416,6 +501,10 @@
 
 @keyframes stripe-run {
   to { background-position: 45px 0; }
+}
+
+@keyframes demo-grid-drift {
+  to { background-position: 42px 42px, 42px 42px, 0 0; }
 }
 
 @keyframes hero-copy-in {
@@ -446,6 +535,31 @@
 @keyframes row-flash {
   from { opacity: 0; transform: scaleX(0.75); }
   to { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes demo-step-sheen {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
+}
+
+@keyframes demo-panel-swap {
+  from { opacity: 0; transform: translateY(10px); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes metric-flip {
+  from { opacity: 0; transform: translateY(8px) rotateX(-18deg); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0) rotateX(0deg); filter: blur(0); }
+}
+
+@keyframes demo-led-on {
+  0% { opacity: 0; transform: scale(0.6); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.36); }
+  70% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 8px hsl(var(--primary) / 0); }
+  100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+}
+
+@keyframes route-flow {
+  to { background-position: 0 18px; }
 }
 
 @keyframes scanline-pass {

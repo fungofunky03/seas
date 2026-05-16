@@ -43,6 +43,7 @@ import {
   HardHat,
   FileText,
   Cable,
+  type LucideIcon,
 } from "lucide-react";
 
 /* ----------------------------- FAQ data + JSON-LD ----------------------------- */
@@ -100,6 +101,7 @@ export default function Home() {
         <ProblemSection />
         <ReplaceStackSection />
         <ProductStory />
+        <InteractiveDemo />
         <FeaturesSection />
         <WhyDealersCare />
         <ElectricianBuilt />
@@ -132,6 +134,7 @@ function Header() {
         <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
           <NavLink id="problem" label="Problem" />
           <NavLink id="how" label="How it works" />
+          <NavLink id="demo" label="Demo" />
           <NavLink id="replace" label="Replace" />
           <NavLink id="features" label="Features" />
           <NavLink id="faq" label="FAQ" />
@@ -589,6 +592,315 @@ function ProductStory() {
               <p className="mt-3 text-base text-muted-foreground">{body}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------------- Interactive Demo ----------------------------- */
+
+type DemoStep = {
+  key: "quote" | "schedule" | "install" | "service";
+  label: string;
+  icon: LucideIcon;
+  operator: string;
+  headline: string;
+  summary: string;
+  status: string;
+  metric: string;
+  metricLabel: string;
+  details: { k: string; v: string }[];
+  checklist: string[];
+  note: string;
+};
+
+const DEMO_STEPS: DemoStep[] = [
+  {
+    key: "quote",
+    label: "Quote",
+    icon: FileText,
+    operator: "Dealer / sales",
+    headline: "Same-day quote with install reality baked in.",
+    summary:
+      "The lead turns into a structured permanent-lighting estimate with roofline footage, channels, controllers, transformers, add-ons, and margin visible before the proposal goes out.",
+    status: "Proposal ready",
+    metric: "$8,740",
+    metricLabel: "Quoted project",
+    details: [
+      { k: "Customer", v: "Hartwell Residence · 412 Ridge Pkwy" },
+      { k: "Measure", v: "218 ft eave · 64 ft soffit · 4 zones" },
+      { k: "Electrical", v: "2× 200W transformers · 24V RGB+W" },
+      { k: "Margin", v: "38% target after lift + labor" },
+    ],
+    checklist: [
+      "Roofline photo marked with channel zones",
+      "Controller and transformer locations captured",
+      "Maintenance plan included in proposal",
+    ],
+    note: "Dealer sees the price, scope, and install assumptions before the quote ever reaches the homeowner.",
+  },
+  {
+    key: "schedule",
+    label: "Schedule",
+    icon: Calendar,
+    operator: "Ops / dispatcher",
+    headline: "Turn the sold job into a clean crew assignment.",
+    summary:
+      "Once approved, SEAS creates the job packet, slots the crew, flags the lift requirement, and builds a pre-stage list so the truck leaves with the right gear.",
+    status: "Crew locked",
+    metric: "Mon 7:30a",
+    metricLabel: "Install window",
+    details: [
+      { k: "Crew", v: "Crew B · Luis + Marco" },
+      { k: "Route", v: "West zone · 18 min from prior job" },
+      { k: "Equipment", v: "28 ft ladder · compact lift requested" },
+      { k: "Pre-stage", v: "Track, lenses, controllers, 400W total power" },
+    ],
+    checklist: [
+      "Access notes sent to crew lead",
+      "Materials staged by zone and color",
+      "Homeowner confirmation text queued",
+    ],
+    note: "The office stops retyping the sale into a calendar, a spreadsheet, and a group text.",
+  },
+  {
+    key: "install",
+    label: "Install",
+    icon: Wrench,
+    operator: "Crew lead",
+    headline: "Crew sees the plan, documents the work, and closes the loop.",
+    summary:
+      "The field view carries the measurements, channel plan, transformer placement, safety notes, and photo checklist so installation details do not disappear after the truck rolls.",
+    status: "Install in progress",
+    metric: "8 / 11",
+    metricLabel: "Checklist done",
+    details: [
+      { k: "Transformer", v: "Garage east wall · dedicated outlet nearby" },
+      { k: "Controller", v: "North soffit corner · hidden from street" },
+      { k: "Photo log", v: "24 install photos attached" },
+      { k: "Field note", v: "Add 18 ft splice at west return" },
+    ],
+    checklist: [
+      "Channel 1–4 tested before ladder teardown",
+      "Run diagram attached to job record",
+      "Completion photos ready for homeowner",
+    ],
+    note: "Crew details become permanent job data instead of disappearing into someone’s camera roll.",
+  },
+  {
+    key: "service",
+    label: "Service",
+    icon: Shield,
+    operator: "Service / owner",
+    headline: "Warranty callbacks start with the full install record.",
+    summary:
+      "Months later, the dealer can pull up exactly what was installed, where the controller sits, which channel is affected, and which photos show the original run.",
+    status: "Service record live",
+    metric: "48 hr",
+    metricLabel: "Callback target",
+    details: [
+      { k: "Issue", v: "Channel 3 flicker · north eave" },
+      { k: "Warranty", v: "Year-one service included" },
+      { k: "History", v: "Original test photos + run diagram linked" },
+      { k: "Upsell", v: "Annual tune-up reminder scheduled" },
+    ],
+    checklist: [
+      "Tech sees transformer and channel notes",
+      "Service photos saved back to the same job",
+      "Owner sees recurring service opportunity",
+    ],
+    note: "Service becomes part of the customer lifetime value, not just a fire drill.",
+  },
+];
+
+function InteractiveDemo() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = DEMO_STEPS[activeIndex];
+  const Icon = active.icon;
+
+  return (
+    <section id="demo" className="relative overflow-hidden border-b border-border bg-foreground py-20 text-background md:py-28">
+      <div className="absolute inset-0 demo-grid opacity-35" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 stripe-accent animated-stripe" aria-hidden="true" />
+      <div className="relative mx-auto max-w-6xl px-5">
+        <div className="grid gap-8 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-7">
+            <SectionEyebrow className="border-background/20 text-background/65">
+              Interactive product demo
+            </SectionEyebrow>
+            <h2 className="mt-3 font-display text-3xl font-black uppercase tracking-tight md:text-5xl">
+              Click through the job flow before you join the waitlist.
+            </h2>
+          </div>
+          <p className="text-base text-background/70 md:col-span-5">
+            This is a self-contained demo using realistic permanent-lighting job data:
+            quote, schedule, install, and service all tied to the same customer record.
+          </p>
+        </div>
+
+        <div className="mt-12 demo-shell border border-background/15 bg-background/[0.04] p-4 md:p-6">
+          <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
+            <div className="space-y-3">
+              {DEMO_STEPS.map(({ label, icon: StepIcon, operator }, index) => {
+                const isActive = activeIndex === index;
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    className={`demo-step-button group w-full border p-4 text-left transition-all ${
+                      isActive
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-background/15 bg-background/[0.035] text-background/75 hover:border-background/35 hover:bg-background/[0.08]"
+                    }`}
+                    aria-pressed={isActive}
+                    data-testid={`button-demo-${label.toLowerCase()}`}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`flex h-9 w-9 items-center justify-center border ${
+                            isActive ? "border-primary-foreground/35" : "border-background/20"
+                          }`}
+                        >
+                          <StepIcon className="h-4 w-4" />
+                        </span>
+                        <div>
+                          <div className="font-display text-lg font-black uppercase tracking-tight">
+                            {label}
+                          </div>
+                          <div
+                            className={`font-mono text-[10px] uppercase tracking-widest ${
+                              isActive ? "text-primary-foreground/70" : "text-background/45"
+                            }`}
+                          >
+                            {operator}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="font-mono text-[11px] uppercase tracking-widest">
+                        0{index + 1}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+              <div className="hidden border border-background/15 bg-background/[0.035] p-4 text-xs text-background/55 lg:block">
+                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/35">
+                  Live handoff
+                </div>
+                <div className="demo-route-line mt-4" aria-hidden="true" />
+                <p className="mt-4">
+                  Same job, same record. Each step inherits the data from the one before it.
+                </p>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden border border-background/15 bg-background text-foreground">
+              <div className="scanline" aria-hidden="true" />
+              <div className="grid border-b border-border bg-card md:grid-cols-[1fr_240px]">
+                <div className="p-5 md:p-7">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="live-status inline-flex items-center gap-2 border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-primary">
+                      <span className="live-dot h-1.5 w-1.5 bg-primary" />
+                      {active.status}
+                    </span>
+                    <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                      Job · #SE-0428 · Hartwell
+                    </span>
+                  </div>
+                  <div key={active.key} className="demo-panel-swap mt-5">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-12 w-12 items-center justify-center border border-foreground bg-foreground text-background">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <div>
+                        <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                          {active.label} workspace
+                        </div>
+                        <h3 className="font-display text-2xl font-black uppercase tracking-tight">
+                          {active.headline}
+                        </h3>
+                      </div>
+                    </div>
+                    <p className="mt-5 max-w-2xl text-base text-muted-foreground">{active.summary}</p>
+                  </div>
+                </div>
+                <div className="border-t border-border p-5 md:border-l md:border-t-0">
+                  <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                    {active.metricLabel}
+                  </div>
+                  <div key={`${active.key}-metric`} className="metric-flip mt-2 font-display text-4xl font-black uppercase tracking-tight text-primary">
+                    {active.metric}
+                  </div>
+                  <div className="mt-4 h-1 overflow-hidden bg-foreground/10">
+                    <div
+                      className="live-meter h-full bg-primary"
+                      style={{ width: `${(activeIndex + 1) * 25}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-px bg-border md:grid-cols-[1.2fr_0.8fr]">
+                <div className="bg-background p-5 md:p-7">
+                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    Job data that carries forward
+                  </div>
+                  <div key={`${active.key}-details`} className="demo-panel-swap mt-5 grid gap-3">
+                    {active.details.map((detail) => (
+                      <div
+                        key={detail.k}
+                        className="grid gap-1 border-l-2 border-primary/40 bg-card p-3 sm:grid-cols-[120px_1fr]"
+                        data-testid={`demo-detail-${active.key}-${detail.k.toLowerCase().replace(/\s+/g, "-")}`}
+                      >
+                        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                          {detail.k}
+                        </div>
+                        <div className="text-sm font-semibold">{detail.v}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-card p-5 md:p-7">
+                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    What changes in the field
+                  </div>
+                  <ul key={`${active.key}-checklist`} className="demo-panel-swap mt-5 space-y-3">
+                    {active.checklist.map((item, index) => (
+                      <li key={item} className="flex items-start gap-3 text-sm">
+                        <span className="demo-led mt-1 h-2 w-2 shrink-0 bg-primary" style={{ animationDelay: `${index * 120}ms` }} />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div key={`${active.key}-note`} className="demo-panel-swap mt-6 border border-border bg-background p-4 text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">Why it matters: </span>
+                    {active.note}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-3 border border-background/15 bg-background/[0.035] p-4 text-sm text-background/70 sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              Want the real version shaped around your crew’s workflow?
+            </span>
+            <Button
+              className="animated-cta rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
+              data-testid="button-demo-cta"
+              onClick={() =>
+                document
+                  .getElementById("waitlist")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }
+            >
+              Join validation
+              <ArrowRight className="cta-arrow ml-2 h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </section>
@@ -1218,9 +1530,15 @@ function Footer() {
 
 /* ---------------------------- Shared bits ------------------------------- */
 
-function SectionEyebrow({ children }: { children: React.ReactNode }) {
+function SectionEyebrow({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+    <div className={`inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground ${className}`}>
       <span className="h-px w-8 bg-primary" />
       {children}
     </div>
