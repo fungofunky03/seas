@@ -131,6 +131,7 @@ export default function Home() {
         <Hero />
         <ValidationStrip />
         <ProblemSection />
+        <OwnerAutomationSection />
         <ReplaceStackSection />
         <ProductStory />
         <InteractiveDemo onStepClick={trackDemoStep} />
@@ -165,6 +166,7 @@ function Header() {
         </a>
         <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
           <NavLink id="problem" label="Problem" />
+          <NavLink id="automation" label="Automation" />
           <NavLink id="how" label="How it works" />
           <NavLink id="demo" label="Demo" />
           <NavLink id="replace" label="Replace" />
@@ -486,6 +488,220 @@ function ProblemSection() {
               <p className="mt-2 text-base text-muted-foreground">{body}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------- Owner automation story ------------------------- */
+
+function OwnerAutomationSection() {
+  const phases = [
+    {
+      label: "Lead captured",
+      pain: "New inquiry buried in a text thread",
+      behind: "Extract customer, address, install type, and urgency",
+      owner: "New permanent lighting lead ready for review",
+    },
+    {
+      label: "Scope built",
+      pain: "Roofline notes, footage, and photos scattered",
+      behind: "Build job scope from measurements, zones, controller notes, and photos",
+      owner: "Scope packet assembled with missing info flagged",
+    },
+    {
+      label: "Quote prepared",
+      pain: "Manual pricing math and margin guesswork",
+      behind: "Calculate materials, labor, add-ons, margin, and proposal tasks",
+      owner: "Dealer-ready quote draft waiting for approval",
+    },
+    {
+      label: "Crew handoff",
+      pain: "Crew asks the same questions on install morning",
+      behind: "Generate install sheet, pre-stage list, access notes, and service record",
+      owner: "Crew packet, schedule, and service trail created",
+    },
+  ];
+
+  const [phaseIndex, setPhaseIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(
+      () => setPhaseIndex((current) => (current + 1) % phases.length),
+      2600,
+    );
+    return () => window.clearInterval(timer);
+  }, [phases.length]);
+
+  const phase = phases[phaseIndex];
+
+  return (
+    <section id="automation" className="relative overflow-hidden border-b border-border bg-foreground py-20 text-background md:py-28">
+      <div className="absolute inset-0 demo-grid opacity-30" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 stripe-accent animated-stripe" aria-hidden="true" />
+      <div className="relative mx-auto max-w-6xl px-5">
+        <div className="grid gap-8 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-7">
+            <SectionEyebrow className="border-background/20 text-background/65">
+              Done-for-you automation
+            </SectionEyebrow>
+            <h2 className="mt-3 font-display text-3xl font-black uppercase tracking-tight md:text-5xl">
+              Owners see simple. SEAS handles the meticulous work.
+            </h2>
+          </div>
+          <p className="text-base text-background/70 md:col-span-5">
+            The biggest pain point is not one task. It is the hidden chain of follow-ups,
+            math, handoffs, and reminders that has to happen every time a lighting lead
+            turns into a real install.
+          </p>
+        </div>
+
+        <div className="automation-stage mt-12 grid gap-6 lg:grid-cols-[1fr_360px]">
+          <div className="relative overflow-hidden border border-background/15 bg-background/[0.04] p-5 md:p-7">
+            <div className="scanline" aria-hidden="true" />
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-background/45">
+                  Behind the scenes
+                </div>
+                <h3 className="automation-panel-heading mt-2 font-display text-2xl font-black uppercase">
+                  Workflow designed behind the scenes
+                </h3>
+              </div>
+              <span
+                key={phase.label}
+                className="live-status inline-flex items-center gap-2 border border-primary/30 bg-primary/15 px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-primary"
+                data-testid="status-automation-phase"
+              >
+                <span className="live-dot h-1.5 w-1.5 bg-primary" />
+                {phase.label}
+              </span>
+            </div>
+
+            <div className="automation-canvas mt-8">
+              <div className="automation-chaos-card">
+                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/45">
+                  Owner pain
+                </div>
+                <div key={`${phase.label}-pain`} className="demo-panel-swap mt-2 text-sm font-semibold">
+                  {phase.pain}
+                </div>
+              </div>
+
+              <div className="automation-node node-lead">
+                <FileText className="h-4 w-4" />
+                <span>Lead</span>
+              </div>
+              <div className="automation-node node-measure">
+                <Ruler className="h-4 w-4" />
+                <span>Measure</span>
+              </div>
+              <div className="automation-node node-quote">
+                <ClipboardList className="h-4 w-4" />
+                <span>Quote</span>
+              </div>
+              <div className="automation-node node-crew">
+                <HardHat className="h-4 w-4" />
+                <span>Crew</span>
+              </div>
+              <div className="automation-node node-service">
+                <Shield className="h-4 w-4" />
+                <span>Service</span>
+              </div>
+
+              <svg className="automation-lines" viewBox="0 0 760 360" aria-hidden="true">
+                <path className="automation-path path-one" d="M82 92 C190 42, 275 52, 345 120 S520 222, 660 112" />
+                <path className="automation-path path-two" d="M116 248 C232 170, 336 250, 432 188 S558 102, 684 230" />
+                <path className="automation-path path-three" d="M210 76 C250 165, 288 214, 380 226 S560 298, 640 184" />
+              </svg>
+
+              <div className="automation-build-log">
+                {[
+                  "Normalize lead source",
+                  "Map install constraints",
+                  "Calculate quote tasks",
+                  "Prepare crew packet",
+                  "Create service trail",
+                ].map((item, index) => (
+                  <div
+                    key={item}
+                    className="automation-log-row"
+                    style={{ animationDelay: `${index * 240}ms` }}
+                  >
+                    <span className="demo-led h-2 w-2 bg-primary" />
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div className="automation-output-card">
+                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/45">
+                  Designed output
+                </div>
+                <div key={`${phase.label}-behind`} className="demo-panel-swap mt-2 text-sm font-semibold">
+                  {phase.behind}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="owner-pov-card border border-background/15 bg-background text-foreground">
+            <div className="border-b border-border bg-card p-4">
+              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                Owner POV
+              </div>
+              <h3 className="mt-2 font-display text-2xl font-black uppercase tracking-tight">
+                Easy done-for-you automation
+              </h3>
+            </div>
+            <div className="p-5">
+              <div className="rounded-none border border-border bg-background p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Hartwell Residence
+                    </div>
+                    <div key={`${phase.label}-owner`} className="demo-panel-swap mt-2 text-lg font-bold">
+                      {phase.owner}
+                    </div>
+                  </div>
+                  <span className="flex h-10 w-10 items-center justify-center bg-primary text-primary-foreground">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-3">
+                {[
+                  ["Lead", "Captured"],
+                  ["Scope", phaseIndex >= 1 ? "Built" : "Queued"],
+                  ["Quote", phaseIndex >= 2 ? "Drafted" : "Queued"],
+                  ["Crew", phaseIndex >= 3 ? "Ready" : "Queued"],
+                ].map(([label, value], index) => (
+                  <div key={label} className="owner-pov-row">
+                    <span>{label}</span>
+                    <strong className={index <= phaseIndex ? "text-primary" : "text-muted-foreground"}>
+                      {value}
+                    </strong>
+                  </div>
+                ))}
+              </div>
+
+              <Button
+                className="animated-cta mt-6 h-12 w-full rounded-none bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
+                data-testid="button-automation-cta"
+                onClick={() =>
+                  document
+                    .getElementById("demo")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
+              >
+                See the workflow
+                <ArrowRight className="cta-arrow ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
