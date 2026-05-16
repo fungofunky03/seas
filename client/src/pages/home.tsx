@@ -739,54 +739,50 @@ function InteractiveDemo() {
           </p>
         </div>
 
-        <div className="mt-12 demo-shell border border-background/15 bg-background/[0.04] p-4 md:p-6">
-          <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
-            <div className="space-y-3">
-              {DEMO_STEPS.map(({ label, icon: StepIcon, operator }, index) => {
-                const isActive = activeIndex === index;
-                return (
-                  <button
-                    key={label}
-                    type="button"
-                    onClick={() => setActiveIndex(index)}
-                    className={`demo-step-button group w-full border p-4 text-left transition-all ${
-                      isActive
+        <div className="mt-12 demo-shell overflow-hidden border border-background/15 bg-background/[0.04]">
+          <div className="flex items-center justify-between border-b border-background/15 bg-background/[0.08] px-4 py-3">
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-full bg-primary" />
+              <span className="h-3 w-3 rounded-full bg-background/25" />
+              <span className="h-3 w-3 rounded-full bg-background/15" />
+              <span className="ml-3 hidden font-mono text-[11px] uppercase tracking-[0.22em] text-background/45 sm:inline">
+                app.seas.tools / job / SE-0428
+              </span>
+            </div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/45">
+              Demo mode
+            </span>
+          </div>
+
+          <div className="grid min-h-[680px] lg:grid-cols-[240px_1fr]">
+            <aside className="border-b border-background/15 bg-background/[0.06] p-4 lg:border-b-0 lg:border-r">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-display text-xl font-black uppercase tracking-tight">SEAS</div>
+                  <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/40">
+                    Dealer workspace
+                  </div>
+                </div>
+                <span className="live-dot h-2 w-2 bg-primary" />
+              </div>
+
+              <div className="mt-6 grid grid-cols-2 gap-2 lg:grid-cols-1">
+                {["Pipeline", "Jobs", "Crews", "Service"].map((item, index) => (
+                  <div
+                    key={item}
+                    className={`border px-3 py-2 font-mono text-[10px] uppercase tracking-widest ${
+                      index === 1
                         ? "border-primary bg-primary text-primary-foreground"
-                        : "border-background/15 bg-background/[0.035] text-background/75 hover:border-background/35 hover:bg-background/[0.08]"
+                        : "border-background/15 text-background/45"
                     }`}
-                    aria-pressed={isActive}
-                    data-testid={`button-demo-${label.toLowerCase()}`}
+                    data-testid={`demo-sidebar-${item.toLowerCase()}`}
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`flex h-9 w-9 items-center justify-center border ${
-                            isActive ? "border-primary-foreground/35" : "border-background/20"
-                          }`}
-                        >
-                          <StepIcon className="h-4 w-4" />
-                        </span>
-                        <div>
-                          <div className="font-display text-lg font-black uppercase tracking-tight">
-                            {label}
-                          </div>
-                          <div
-                            className={`font-mono text-[10px] uppercase tracking-widest ${
-                              isActive ? "text-primary-foreground/70" : "text-background/45"
-                            }`}
-                          >
-                            {operator}
-                          </div>
-                        </div>
-                      </div>
-                      <span className="font-mono text-[11px] uppercase tracking-widest">
-                        0{index + 1}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-              <div className="hidden border border-background/15 bg-background/[0.035] p-4 text-xs text-background/55 lg:block">
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 hidden border border-background/15 bg-background/[0.035] p-4 text-xs text-background/55 lg:block">
                 <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-background/35">
                   Live handoff
                 </div>
@@ -795,90 +791,174 @@ function InteractiveDemo() {
                   Same job, same record. Each step inherits the data from the one before it.
                 </p>
               </div>
-            </div>
+            </aside>
 
-            <div className="relative overflow-hidden border border-background/15 bg-background text-foreground">
-              <div className="scanline" aria-hidden="true" />
-              <div className="grid border-b border-border bg-card md:grid-cols-[1fr_240px]">
-                <div className="p-5 md:p-7">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="live-status inline-flex items-center gap-2 border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-primary">
-                      <span className="live-dot h-1.5 w-1.5 bg-primary" />
-                      {active.status}
-                    </span>
-                    <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-                      Job · #SE-0428 · Hartwell
-                    </span>
+            <div className="bg-background text-foreground">
+              <div className="grid border-b border-border bg-card px-5 py-4 md:grid-cols-[1fr_auto] md:items-center">
+                <div>
+                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                    Permanent lighting job
                   </div>
-                  <div key={active.key} className="demo-panel-swap mt-5">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-12 w-12 items-center justify-center border border-foreground bg-foreground text-background">
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <div>
-                        <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-                          {active.label} workspace
-                        </div>
-                        <h3 className="font-display text-2xl font-black uppercase tracking-tight">
-                          {active.headline}
-                        </h3>
-                      </div>
-                    </div>
-                    <p className="mt-5 max-w-2xl text-base text-muted-foreground">{active.summary}</p>
-                  </div>
+                  <h3 className="mt-1 font-display text-2xl font-black uppercase tracking-tight">
+                    Hartwell Residence
+                  </h3>
                 </div>
-                <div className="border-t border-border p-5 md:border-l md:border-t-0">
-                  <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-                    {active.metricLabel}
-                  </div>
-                  <div key={`${active.key}-metric`} className="metric-flip mt-2 font-display text-4xl font-black uppercase tracking-tight text-primary">
-                    {active.metric}
-                  </div>
-                  <div className="mt-4 h-1 overflow-hidden bg-foreground/10">
-                    <div
-                      className="live-meter h-full bg-primary"
-                      style={{ width: `${(activeIndex + 1) * 25}%` }}
-                    />
-                  </div>
+                <div className="mt-4 flex flex-wrap gap-2 md:mt-0">
+                  {["West zone", "RGB+W", "24V", "Warranty incl."].map((tag) => (
+                    <span
+                      key={tag}
+                      className="border border-border bg-background px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               </div>
 
-              <div className="grid gap-px bg-border md:grid-cols-[1.2fr_0.8fr]">
-                <div className="bg-background p-5 md:p-7">
-                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                    Job data that carries forward
-                  </div>
-                  <div key={`${active.key}-details`} className="demo-panel-swap mt-5 grid gap-3">
-                    {active.details.map((detail) => (
-                      <div
-                        key={detail.k}
-                        className="grid gap-1 border-l-2 border-primary/40 bg-card p-3 sm:grid-cols-[120px_1fr]"
-                        data-testid={`demo-detail-${active.key}-${detail.k.toLowerCase().replace(/\s+/g, "-")}`}
-                      >
-                        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                          {detail.k}
-                        </div>
-                        <div className="text-sm font-semibold">{detail.v}</div>
+              <div className="grid gap-px bg-border md:grid-cols-4">
+                {DEMO_STEPS.map(({ label, icon: StepIcon, operator }, index) => {
+                  const isActive = activeIndex === index;
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => setActiveIndex(index)}
+                      className={`demo-step-button bg-background p-4 text-left transition-all ${
+                        isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                      }`}
+                      aria-pressed={isActive}
+                      data-testid={`button-demo-${label.toLowerCase()}`}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <span
+                          className={`flex h-9 w-9 items-center justify-center border ${
+                            isActive ? "border-primary bg-primary text-primary-foreground" : "border-border"
+                          }`}
+                        >
+                          <StepIcon className="h-4 w-4" />
+                        </span>
+                        <span className="font-mono text-[11px] uppercase tracking-widest">0{index + 1}</span>
                       </div>
-                    ))}
+                      <div className="mt-3 font-display text-lg font-black uppercase tracking-tight">
+                        {label}
+                      </div>
+                      <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                        {operator}
+                      </div>
+                      <div className="mt-3 h-1 overflow-hidden bg-foreground/10">
+                        <div
+                          className={`h-full bg-primary transition-all duration-500 ${
+                            index <= activeIndex ? "w-full" : "w-0"
+                          }`}
+                        />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="relative overflow-hidden">
+                <div className="scanline" aria-hidden="true" />
+                <div className="grid gap-px bg-border xl:grid-cols-[1fr_320px]">
+                  <div className="bg-background p-5 md:p-7">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="live-status inline-flex items-center gap-2 border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-[11px] uppercase tracking-widest text-primary">
+                        <span className="live-dot h-1.5 w-1.5 bg-primary" />
+                        {active.status}
+                      </span>
+                      <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                        Job · #SE-0428 · Hartwell
+                      </span>
+                    </div>
+
+                    <div key={active.key} className="demo-panel-swap mt-6">
+                      <div className="flex items-start gap-4">
+                        <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-foreground bg-foreground text-background">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <div>
+                          <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                            {active.label} workspace
+                          </div>
+                          <h3 className="demo-workspace-heading font-display text-xl font-black uppercase tracking-tight sm:text-2xl md:text-3xl">
+                            {active.headline}
+                          </h3>
+                          <p className="mt-4 max-w-2xl text-base text-muted-foreground">
+                            {active.summary}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-7 grid gap-3 sm:grid-cols-2">
+                        {active.details.map((detail) => (
+                          <div
+                            key={detail.k}
+                            className="grid gap-2 border border-border bg-card p-4"
+                            data-testid={`demo-detail-${active.key}-${detail.k.toLowerCase().replace(/\s+/g, "-")}`}
+                          >
+                            <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                              {detail.k}
+                            </div>
+                            <div className="text-sm font-semibold">{detail.v}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="bg-card p-5 md:p-7">
-                  <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                    What changes in the field
-                  </div>
-                  <ul key={`${active.key}-checklist`} className="demo-panel-swap mt-5 space-y-3">
-                    {active.checklist.map((item, index) => (
-                      <li key={item} className="flex items-start gap-3 text-sm">
-                        <span className="demo-led mt-1 h-2 w-2 shrink-0 bg-primary" style={{ animationDelay: `${index * 120}ms` }} />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div key={`${active.key}-note`} className="demo-panel-swap mt-6 border border-border bg-background p-4 text-sm text-muted-foreground">
-                    <span className="font-semibold text-foreground">Why it matters: </span>
-                    {active.note}
-                  </div>
+
+                  <aside className="bg-card p-5 md:p-7">
+                    <div className="grid grid-cols-2 gap-px bg-border">
+                      <div className="bg-background p-4">
+                        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                          {active.metricLabel}
+                        </div>
+                        <div key={`${active.key}-metric`} className="metric-flip mt-2 font-display text-3xl font-black uppercase tracking-tight text-primary">
+                          {active.metric}
+                        </div>
+                      </div>
+                      <div className="bg-background p-4">
+                        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                          Flow progress
+                        </div>
+                        <div className="mt-3 h-10 border border-border bg-card p-1">
+                          <div
+                            className="live-meter h-full bg-primary"
+                            style={{ width: `${(activeIndex + 1) * 25}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 border border-border bg-background p-4">
+                      <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                        Field checklist
+                      </div>
+                      <ul key={`${active.key}-checklist`} className="demo-panel-swap mt-4 space-y-3">
+                        {active.checklist.map((item, index) => (
+                          <li key={item} className="flex items-start gap-3 text-sm">
+                            <span className="demo-led mt-1 h-2 w-2 shrink-0 bg-primary" style={{ animationDelay: `${index * 120}ms` }} />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="mt-5 border border-border bg-background p-4">
+                      <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                        Activity
+                      </div>
+                      <div key={`${active.key}-activity`} className="demo-panel-swap mt-4 space-y-3 text-sm">
+                        <ActivityLine text={`${active.operator} updated ${active.label.toLowerCase()} workspace`} />
+                        <ActivityLine text="Customer record synced across job flow" />
+                        <ActivityLine text="Next handoff data prepared automatically" />
+                      </div>
+                    </div>
+
+                    <div key={`${active.key}-note`} className="demo-panel-swap mt-5 border border-primary/25 bg-primary/10 p-4 text-sm text-muted-foreground">
+                      <span className="font-semibold text-foreground">Why it matters: </span>
+                      {active.note}
+                    </div>
+                  </aside>
                 </div>
               </div>
             </div>
@@ -904,6 +984,15 @@ function InteractiveDemo() {
         </div>
       </div>
     </section>
+  );
+}
+
+function ActivityLine({ text }: { text: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <span className="demo-led mt-1.5 h-2 w-2 shrink-0 bg-primary" />
+      <span className="text-muted-foreground">{text}</span>
+    </div>
   );
 }
 

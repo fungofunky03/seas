@@ -441,6 +441,12 @@
     animation: demo-panel-swap 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
+  .demo-workspace-heading {
+    line-height: 1.08;
+    word-spacing: 0.08em;
+    text-wrap: balance;
+  }
+
   .metric-flip {
     animation: metric-flip 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
     transform-origin: 50% 100%;
