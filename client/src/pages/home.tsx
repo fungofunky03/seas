@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Form,
   FormField,
@@ -96,7 +96,9 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <ValidationStrip />
         <ProblemSection />
+        <ReplaceStackSection />
         <ProductStory />
         <FeaturesSection />
         <WhyDealersCare />
@@ -105,6 +107,7 @@ export default function Home() {
         <FAQSection />
       </main>
       <Footer />
+      <StickyMobileCTA />
     </div>
   );
 }
@@ -129,6 +132,7 @@ function Header() {
         <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
           <NavLink id="problem" label="Problem" />
           <NavLink id="how" label="How it works" />
+          <NavLink id="replace" label="Replace" />
           <NavLink id="features" label="Features" />
           <NavLink id="faq" label="FAQ" />
         </nav>
@@ -181,11 +185,12 @@ function Hero() {
               className="font-display text-[clamp(2.5rem,1rem+5vw,4.5rem)] font-black uppercase leading-[0.95] tracking-tight"
               data-testid="text-hero-headline"
             >
-              The operating system for{" "}
-              <span className="text-primary">permanent lighting</span> crews.
+              Run permanent lighting jobs without the{" "}
+              <span className="text-primary">text-thread chaos</span>.
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-              SEAS turns scattered leads, rough estimates, and crew confusion into{" "}
+              SEAS turns scattered leads, rough estimates, crew handoffs, and warranty
+              callbacks into{" "}
               <span className="font-semibold text-foreground">
                 one dealer-ready workflow from quote to install to service
               </span>
@@ -202,7 +207,7 @@ function Hero() {
                     ?.scrollIntoView({ behavior: "smooth", block: "start" })
                 }
               >
-                Join the installer waitlist
+                Join the installer validation group
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button
@@ -226,11 +231,11 @@ function Hero() {
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary" />
-                Free during early validation
+                Built around quote → install → service
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-primary" />
-                No homeowner fluff
+                Early access is free during validation
               </li>
             </ul>
           </div>
@@ -239,6 +244,38 @@ function Hero() {
             <HeroPanel />
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function ValidationStrip() {
+  const items = [
+    {
+      k: "Built for",
+      v: "Permanent lighting dealers, crews, and electricians",
+    },
+    {
+      k: "First workflows",
+      v: "Quote builder, crew job sheets, install documentation",
+    },
+    {
+      k: "Validation ask",
+      v: "Tell us where the real bottleneck is before launch",
+    },
+  ];
+
+  return (
+    <section className="border-b border-border bg-foreground text-background">
+      <div className="mx-auto grid max-w-6xl divide-y divide-background/15 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        {items.map((item, i) => (
+          <div key={i} className="py-5 sm:px-6 first:sm:pl-0 last:sm:pr-0" data-testid={`strip-validation-${i}`}>
+            <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-background/55">
+              {item.k}
+            </div>
+            <div className="mt-1 text-sm font-semibold leading-snug">{item.v}</div>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -352,6 +389,80 @@ function ProblemSection() {
                 {title}
               </h3>
               <p className="mt-2 text-base text-muted-foreground">{body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------------- Replace stack ----------------------------- */
+
+function ReplaceStackSection() {
+  const rows = [
+    {
+      old: "Spreadsheet estimate",
+      gap: "Pricing, footage, controllers, and margin drift before the quote is sent.",
+      seas: "Structured quote path with material, labor, and install notes captured once.",
+    },
+    {
+      old: "Group-text crew handoff",
+      gap: "Address, access notes, channel map, lift plan, and transformer location get split across threads.",
+      seas: "Field-ready job sheet that travels from sale to install without retyping.",
+    },
+    {
+      old: "Generic CRM pipeline",
+      gap: "It can track a deal, but it does not understand roofline, channels, controller placement, or service history.",
+      seas: "Permanent-lighting workflow from lead to install documentation to warranty callback.",
+    },
+  ];
+
+  return (
+    <section id="replace" className="border-b border-border bg-card py-20 md:py-28">
+      <div className="mx-auto max-w-6xl px-5">
+        <SectionEyebrow>What SEAS replaces</SectionEyebrow>
+        <div className="mt-3 grid gap-6 md:grid-cols-12 md:items-end">
+          <h2 className="font-display text-3xl font-black uppercase tracking-tight md:col-span-7 md:text-5xl">
+            Stop duct-taping the install business together.
+          </h2>
+          <p className="text-base text-muted-foreground md:col-span-5">
+            Early validation is focused on the messy handoffs that cost dealers speed,
+            margin, and callbacks — not another generic contact database.
+          </p>
+        </div>
+        <div className="mt-12 overflow-hidden border border-border">
+          <div className="hidden grid-cols-12 border-b border-border bg-foreground px-5 py-3 font-mono text-[11px] uppercase tracking-widest text-background md:grid">
+            <div className="col-span-3">Today</div>
+            <div className="col-span-4">Where it breaks</div>
+            <div className="col-span-5">SEAS workflow</div>
+          </div>
+          {rows.map((row, i) => (
+            <div
+              key={i}
+              className="grid gap-4 border-b border-border bg-background p-5 last:border-b-0 md:grid-cols-12 md:items-start"
+              data-testid={`row-replace-${i}`}
+            >
+              <div className="md:col-span-3">
+                <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:hidden">
+                  Today
+                </div>
+                <div className="mt-1 font-display text-lg font-black uppercase tracking-tight md:mt-0">
+                  {row.old}
+                </div>
+              </div>
+              <div className="text-sm text-muted-foreground md:col-span-4">
+                <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:hidden">
+                  Where it breaks
+                </span>
+                <p className="mt-1 md:mt-0">{row.gap}</p>
+              </div>
+              <div className="border-l-2 border-primary pl-4 text-sm font-medium md:col-span-5">
+                <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground md:hidden">
+                  SEAS workflow
+                </span>
+                <p className="mt-1 md:mt-0">{row.seas}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -662,18 +773,18 @@ function WaitlistSection() {
           <div className="md:col-span-5">
             <SectionEyebrow>Join the installer waitlist</SectionEyebrow>
             <h2 className="mt-3 font-display text-3xl font-black uppercase tracking-tight md:text-5xl">
-              Help shape the workflow{" "}
-              <span className="text-primary">before launch.</span>
+              Get in while the workflow is still being shaped.
             </h2>
             <p className="mt-5 max-w-md text-lg text-muted-foreground">
               We're working with a small validation group of working dealers, crew leads,
               and electricians. Tell us what you run today and where the workflow breaks
               — we'll reach out when your slot opens.
             </p>
+            <WaitlistCount />
             <ul className="mt-8 space-y-3 text-sm">
               {[
                 "Free during early validation",
-                "No spam, no sales pitch — just product",
+                "Founder reply when your workflow is a fit",
                 "Your bottleneck shapes what we build first",
               ].map((line, i) => (
                 <li key={i} className="flex items-center gap-3">
@@ -689,6 +800,34 @@ function WaitlistSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function WaitlistCount() {
+  const countQuery = useQuery({
+    queryKey: ["/api/waitlist/count"],
+    queryFn: async () => {
+      const res = await apiRequest("GET", "/api/waitlist/count");
+      return (await res.json()) as { count: number };
+    },
+    retry: false,
+  });
+
+  const count = countQuery.data?.count;
+  if (!count || count < 3) {
+    return (
+      <div className="mt-6 border border-border bg-card p-4 text-sm text-muted-foreground">
+        <span className="font-semibold text-foreground">Validation slots are intentionally limited.</span>{" "}
+        We are looking for installers who can describe the real job flow, not just sign up for another tool.
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 border border-primary/30 bg-primary/10 p-4 text-sm" data-testid="status-waitlist-count">
+      <span className="font-semibold">{count} installers have joined the validation list.</span>{" "}
+      Add your bottleneck so we can prioritize the right first workflows.
+    </div>
   );
 }
 
@@ -728,6 +867,14 @@ function WaitlistForm() {
         data-testid="status-waitlist-success"
       >
         <div className="absolute -left-px top-0 h-10 w-1 bg-primary" aria-hidden="true" />
+        <div className="mb-6 border-b border-border pb-5">
+          <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+            2-minute founder intake
+          </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            The bottleneck field matters most. If SEAS can solve it, Jay will follow up directly.
+          </p>
+        </div>
         <CheckCircle2 className="h-7 w-7 text-primary" strokeWidth={2.25} />
         <h3 className="mt-5 font-display text-2xl font-black uppercase tracking-tight">
           You're on the installer waitlist.
@@ -913,7 +1060,7 @@ function WaitlistForm() {
           className="mt-7 h-12 w-full rounded-none bg-primary text-base font-semibold text-primary-foreground hover:bg-primary/90 sm:w-auto sm:px-8"
           data-testid="button-submit-waitlist"
         >
-          {mutation.isPending ? "Sending…" : "Join the installer waitlist"}
+          {mutation.isPending ? "Sending…" : "Join the validation group"}
           {!mutation.isPending && <ArrowRight className="ml-2 h-4 w-4" />}
         </Button>
         <p className="mt-3 text-xs text-muted-foreground">
@@ -921,6 +1068,25 @@ function WaitlistForm() {
         </p>
       </form>
     </Form>
+  );
+}
+
+function StickyMobileCTA() {
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 shadow-lg backdrop-blur md:hidden">
+      <Button
+        className="h-12 w-full rounded-none bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
+        data-testid="button-sticky-mobile-cta"
+        onClick={() =>
+          document
+            .getElementById("waitlist")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+      >
+        Join installer validation
+        <ArrowRight className="ml-2 h-4 w-4" />
+      </Button>
+    </div>
   );
 }
 
