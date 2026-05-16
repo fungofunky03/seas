@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -172,12 +172,12 @@ function NavLink({ id, label }: { id: string; label: string }) {
 function Hero() {
   return (
     <section id="top" className="relative overflow-hidden border-b border-border">
-      <div className="bg-grid absolute inset-0 opacity-60" aria-hidden="true" />
-      <div className="absolute inset-x-0 top-0 h-1 stripe-accent" aria-hidden="true" />
+      <div className="bg-grid animated-grid absolute inset-0 opacity-60" aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-1 stripe-accent animated-stripe" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-16 md:pb-28 md:pt-24">
         <div className="grid items-center gap-12 md:grid-cols-12">
-          <div className="md:col-span-7">
-            <div className="mb-6 inline-flex items-center gap-2 border border-border bg-card px-3 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="md:col-span-7 hero-copy-enter">
+            <div className="mb-6 inline-flex items-center gap-2 border border-border bg-card px-3 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground status-chip">
               <span className="h-1.5 w-1.5 bg-primary" />
               Now in installer validation
             </div>
@@ -199,7 +199,7 @@ function Hero() {
             <div className="mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <Button
                 size="lg"
-                className="h-12 rounded-none bg-primary px-7 text-base font-semibold text-primary-foreground hover:bg-primary/90"
+                className="animated-cta h-12 rounded-none bg-primary px-7 text-base font-semibold text-primary-foreground hover:bg-primary/90"
                 data-testid="button-hero-cta"
                 onClick={() =>
                   document
@@ -208,7 +208,7 @@ function Hero() {
                 }
               >
                 Join the installer validation group
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="cta-arrow ml-2 h-4 w-4" />
               </Button>
               <Button
                 size="lg"
@@ -240,7 +240,7 @@ function Hero() {
             </ul>
           </div>
 
-          <div className="md:col-span-5">
+          <div className="md:col-span-5 hero-panel-enter">
             <HeroPanel />
           </div>
         </div>
@@ -269,7 +269,12 @@ function ValidationStrip() {
     <section className="border-b border-border bg-foreground text-background">
       <div className="mx-auto grid max-w-6xl divide-y divide-background/15 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {items.map((item, i) => (
-          <div key={i} className="py-5 sm:px-6 first:sm:pl-0 last:sm:pr-0" data-testid={`strip-validation-${i}`}>
+          <div
+            key={i}
+            className="reveal-fade py-5 sm:px-6 first:sm:pl-0 last:sm:pr-0"
+            style={{ animationDelay: `${i * 80}ms` }}
+            data-testid={`strip-validation-${i}`}
+          >
             <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-background/55">
               {item.k}
             </div>
@@ -283,24 +288,46 @@ function ValidationStrip() {
 
 function HeroPanel() {
   // A stylized "job sheet" card — communicates field-tech, not generic SaaS.
+  const statuses = [
+    { label: "Install ready", tone: "Ready" },
+    { label: "Crew synced", tone: "Live" },
+    { label: "Materials staged", tone: "Clear" },
+  ];
+  const [statusIndex, setStatusIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(
+      () => setStatusIndex((current) => (current + 1) % statuses.length),
+      2200,
+    );
+    return () => window.clearInterval(timer);
+  }, [statuses.length]);
+
+  const status = statuses[statusIndex];
+
   return (
-    <div className="relative">
+    <div className="job-card-float relative">
       <div className="absolute -inset-3 border border-border" aria-hidden="true" />
-      <div className="relative border border-foreground/15 bg-card p-5 shadow-xl">
+      <div className="relative overflow-hidden border border-foreground/15 bg-card p-5 shadow-xl">
+        <div className="scanline" aria-hidden="true" />
         <div className="flex items-center justify-between border-b border-border pb-3">
           <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
             Job · #SE-0428
           </span>
-          <span className="inline-flex items-center gap-1.5 border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider text-primary">
-            <span className="h-1.5 w-1.5 bg-primary" />
-            Install ready
+          <span
+            key={status.label}
+            className="live-status inline-flex items-center gap-1.5 border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[11px] uppercase tracking-wider text-primary"
+            data-testid="status-hero-job"
+          >
+            <span className="live-dot h-1.5 w-1.5 bg-primary" />
+            {status.label}
           </span>
         </div>
         <div className="mt-4 space-y-3.5">
           <PanelRow label="Customer" value="Hartwell · 412 Ridge Pkwy" />
           <PanelRow label="Linear ft" value="218 ft eave + 64 ft soffit" mono />
-          <PanelRow label="Channel" value="RGB+W · 24V LV run" mono />
-          <PanelRow label="Crew" value="Crew B · Mon 7:30a" />
+          <PanelRow label="Channel" value="RGB+W · 24V LV run" mono pulse={statusIndex === 1} />
+          <PanelRow label="Crew" value="Crew B · Mon 7:30a" pulse={statusIndex === 1} />
           <PanelRow label="Transformer" value="2× 200W · pre-staged" mono />
         </div>
         <div className="mt-5 grid grid-cols-3 gap-2 border-t border-border pt-4 font-mono text-[11px] uppercase tracking-wider">
@@ -308,20 +335,35 @@ function HeroPanel() {
           <Stat k="Margin" v="38%" />
           <Stat k="Service" v="Yr 1 incl." />
         </div>
+        <div className="mt-5 space-y-2 border-t border-border pt-4">
+          <LiveProgress label="Quote package" value="92%" delay="0ms" />
+          <LiveProgress label="Crew handoff" value="76%" delay="260ms" />
+          <LiveProgress label="Service record" value="58%" delay="520ms" />
+        </div>
       </div>
       <div
         className="absolute -bottom-4 -right-3 hidden border border-foreground/15 bg-foreground px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-background md:block"
         aria-hidden="true"
       >
-        Field-built · v0.1
+        Field-built · {status.tone}
       </div>
     </div>
   );
 }
 
-function PanelRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+function PanelRow({
+  label,
+  value,
+  mono,
+  pulse,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+  pulse?: boolean;
+}) {
   return (
-    <div className="flex items-baseline justify-between gap-4">
+    <div className={`flex items-baseline justify-between gap-4 ${pulse ? "live-row" : ""}`}>
       <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
         {label}
       </span>
@@ -332,9 +374,26 @@ function PanelRow({ label, value, mono }: { label: string; value: string; mono?:
 
 function Stat({ k, v }: { k: string; v: string }) {
   return (
-    <div>
+    <div className="stat-pop">
       <div className="text-muted-foreground">{k}</div>
       <div className="mt-0.5 text-foreground">{v}</div>
+    </div>
+  );
+}
+
+function LiveProgress({ label, value, delay }: { label: string; value: string; delay: string }) {
+  return (
+    <div className="font-mono text-[10px] uppercase tracking-widest" data-testid={`meter-${label.toLowerCase().replace(/\s+/g, "-")}`}>
+      <div className="flex items-center justify-between text-muted-foreground">
+        <span>{label}</span>
+        <span>{value}</span>
+      </div>
+      <div className="mt-1 h-1 overflow-hidden bg-foreground/10">
+        <div
+          className="live-meter h-full bg-primary"
+          style={{ width: value, animationDelay: delay }}
+        />
+      </div>
     </div>
   );
 }
@@ -381,7 +440,8 @@ function ProblemSection() {
           {pains.map(({ icon: Icon, title, body }, i) => (
             <div
               key={i}
-              className="bg-background p-6 md:p-8"
+              className="reveal-fade bg-background p-6 md:p-8"
+              style={{ animationDelay: `${i * 70}ms` }}
               data-testid={`card-pain-${i}`}
             >
               <Icon className="h-6 w-6 text-primary" strokeWidth={2.25} />
@@ -440,7 +500,8 @@ function ReplaceStackSection() {
           {rows.map((row, i) => (
             <div
               key={i}
-              className="grid gap-4 border-b border-border bg-background p-5 last:border-b-0 md:grid-cols-12 md:items-start"
+              className="reveal-fade grid gap-4 border-b border-border bg-background p-5 last:border-b-0 md:grid-cols-12 md:items-start"
+              style={{ animationDelay: `${i * 90}ms` }}
               data-testid={`row-replace-${i}`}
             >
               <div className="md:col-span-3">
@@ -507,14 +568,19 @@ function ProductStory() {
         </h2>
         <div className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
           {steps.map(({ n, icon: Icon, title, body }, i) => (
-            <div key={i} className="relative" data-testid={`step-${i}`}>
+            <div
+              key={i}
+              className="reveal-fade relative"
+              style={{ animationDelay: `${i * 90}ms` }}
+              data-testid={`step-${i}`}
+            >
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
                   Step {n}
                 </span>
                 <span className="h-px flex-1 bg-border" />
               </div>
-              <div className="mt-5 inline-flex h-12 w-12 items-center justify-center border border-foreground bg-foreground text-background">
+              <div className="icon-charge mt-5 inline-flex h-12 w-12 items-center justify-center border border-foreground bg-foreground text-background">
                 <Icon className="h-5 w-5" strokeWidth={2.25} />
               </div>
               <h3 className="mt-5 font-display text-2xl font-black uppercase tracking-tight">
@@ -599,10 +665,11 @@ function FeaturesSection() {
           {features.map(({ icon: Icon, title, body }, i) => (
             <div
               key={i}
-              className="group bg-background p-6 transition-colors hover:bg-card"
+              className="reveal-fade group bg-background p-6 transition-colors hover:bg-card"
+              style={{ animationDelay: `${i * 45}ms` }}
               data-testid={`card-feature-${i}`}
             >
-              <Icon className="h-5 w-5 text-primary" strokeWidth={2.25} />
+              <Icon className="icon-nudge h-5 w-5 text-primary" strokeWidth={2.25} />
               <h3 className="mt-4 font-display text-base font-bold uppercase tracking-tight">
                 {title}
               </h3>
@@ -659,7 +726,8 @@ function WhyDealersCare() {
           {blocks.map(({ who, icon: Icon, points }, i) => (
             <div
               key={i}
-              className="relative border border-border bg-background p-7"
+              className="reveal-fade relative border border-border bg-background p-7"
+              style={{ animationDelay: `${i * 90}ms` }}
               data-testid={`card-audience-${i}`}
             >
               <div className="absolute -left-px top-0 h-10 w-1 bg-primary" aria-hidden="true" />
@@ -698,7 +766,7 @@ function ElectricianBuilt() {
   return (
     <section className="relative overflow-hidden border-b border-border bg-foreground py-20 text-background md:py-28">
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-1 stripe-accent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-1 stripe-accent animated-stripe"
         aria-hidden="true"
       />
       <div className="mx-auto grid max-w-6xl gap-12 px-5 md:grid-cols-12 md:items-center">
@@ -739,7 +807,7 @@ function ElectricianBuilt() {
         <div className="md:col-span-5">
           <div className="relative">
             <div className="absolute -inset-3 border border-background/15" aria-hidden="true" />
-            <blockquote className="relative border border-background/20 bg-background/[0.04] p-7">
+            <blockquote className="electric-quote relative border border-background/20 bg-background/[0.04] p-7">
               <p className="font-display text-xl font-bold leading-snug">
                 "Generic CRMs don't know what a 200-watt transformer is or why the crew
                 cares which side of the soffit the controller is on. SEAS does."
@@ -1057,11 +1125,11 @@ function WaitlistForm() {
           type="submit"
           size="lg"
           disabled={mutation.isPending}
-          className="mt-7 h-12 w-full rounded-none bg-primary text-base font-semibold text-primary-foreground hover:bg-primary/90 sm:w-auto sm:px-8"
+          className="animated-cta mt-7 h-12 w-full rounded-none bg-primary text-base font-semibold text-primary-foreground hover:bg-primary/90 sm:w-auto sm:px-8"
           data-testid="button-submit-waitlist"
         >
           {mutation.isPending ? "Sending…" : "Join the validation group"}
-          {!mutation.isPending && <ArrowRight className="ml-2 h-4 w-4" />}
+          {!mutation.isPending && <ArrowRight className="cta-arrow ml-2 h-4 w-4" />}
         </Button>
         <p className="mt-3 text-xs text-muted-foreground">
           We'll only use this to talk to you about SEAS. No spam, no third-party lists.
@@ -1075,7 +1143,7 @@ function StickyMobileCTA() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 p-3 shadow-lg backdrop-blur md:hidden">
       <Button
-        className="h-12 w-full rounded-none bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
+        className="animated-cta h-12 w-full rounded-none bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
         data-testid="button-sticky-mobile-cta"
         onClick={() =>
           document
@@ -1084,7 +1152,7 @@ function StickyMobileCTA() {
         }
       >
         Join installer validation
-        <ArrowRight className="ml-2 h-4 w-4" />
+        <ArrowRight className="cta-arrow ml-2 h-4 w-4" />
       </Button>
     </div>
   );
