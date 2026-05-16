@@ -87,7 +87,39 @@ const FAQ_SCHEMA = {
 
 /* --------------------------------- Page --------------------------------- */
 
+type DemoStepKey = "quote" | "schedule" | "install" | "service";
+type DemoEngagement = {
+  demoLastStep: string;
+  demoMostClickedStep: string;
+  demoStepClicks: string;
+};
+
 export default function Home() {
+  const [demoClicks, setDemoClicks] = useState<Record<DemoStepKey, number>>({
+    quote: 0,
+    schedule: 0,
+    install: 0,
+    service: 0,
+  });
+  const [demoLastStep, setDemoLastStep] = useState<DemoStepKey | "">("");
+
+  const demoMostClickedStep = (Object.entries(demoClicks) as Array<[DemoStepKey, number]>)
+    .sort((a, b) => b[1] - a[1])[0];
+  const demoEngagement: DemoEngagement = {
+    demoLastStep,
+    demoMostClickedStep:
+      demoMostClickedStep && demoMostClickedStep[1] > 0 ? demoMostClickedStep[0] : "",
+    demoStepClicks: JSON.stringify(demoClicks),
+  };
+
+  const trackDemoStep = (step: DemoStepKey) => {
+    setDemoLastStep(step);
+    setDemoClicks((current) => ({
+      ...current,
+      [step]: current[step] + 1,
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <script
@@ -101,11 +133,11 @@ export default function Home() {
         <ProblemSection />
         <ReplaceStackSection />
         <ProductStory />
-        <InteractiveDemo />
+        <InteractiveDemo onStepClick={trackDemoStep} />
         <FeaturesSection />
         <WhyDealersCare />
         <ElectricianBuilt />
-        <WaitlistSection />
+        <WaitlistSection demoEngagement={demoEngagement} />
         <FAQSection />
       </main>
       <Footer />
@@ -601,7 +633,7 @@ function ProductStory() {
 /* ----------------------------- Interactive Demo ----------------------------- */
 
 type DemoStep = {
-  key: "quote" | "schedule" | "install" | "service";
+  key: DemoStepKey;
   label: string;
   icon: LucideIcon;
   operator: string;
@@ -714,7 +746,7 @@ const DEMO_STEPS: DemoStep[] = [
   },
 ];
 
-function InteractiveDemo() {
+function InteractiveDemo({ onStepClick }: { onStepClick: (step: DemoStepKey) => void }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = DEMO_STEPS[activeIndex];
   const Icon = active.icon;
@@ -816,13 +848,16 @@ function InteractiveDemo() {
               </div>
 
               <div className="grid gap-px bg-border md:grid-cols-4">
-                {DEMO_STEPS.map(({ label, icon: StepIcon, operator }, index) => {
+                {DEMO_STEPS.map(({ key, label, icon: StepIcon, operator }, index) => {
                   const isActive = activeIndex === index;
                   return (
                     <button
                       key={label}
                       type="button"
-                      onClick={() => setActiveIndex(index)}
+                      onClick={() => {
+                        setActiveIndex(index);
+                        onStepClick(key);
+                      }}
                       className={`demo-step-button bg-background p-4 text-left transition-all ${
                         isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                       }`}
@@ -1234,7 +1269,7 @@ function ElectricianBuilt() {
 
 /* -------------------------------- Waitlist ------------------------------- */
 
-function WaitlistSection() {
+function WaitlistSection({ demoEngagement }: { demoEngagement: DemoEngagement }) {
   return (
     <section id="waitlist" className="border-b border-border py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-5">
@@ -1264,7 +1299,7 @@ function WaitlistSection() {
             </ul>
           </div>
           <div className="md:col-span-7">
-            <WaitlistForm />
+            <WaitlistForm demoEngagement={demoEngagement} />
           </div>
         </div>
       </div>
@@ -1300,7 +1335,7 @@ function WaitlistCount() {
   );
 }
 
-function WaitlistForm() {
+function WaitlistForm({ demoEngagement }: { demoEngagement: DemoEngagement }) {
   const [submitted, setSubmitted] = useState(false);
 
   const form = useForm<InsertWaitlist>({
@@ -1312,6 +1347,9 @@ function WaitlistForm() {
       role: undefined as unknown as InsertWaitlist["role"],
       installVolume: undefined as unknown as InsertWaitlist["installVolume"],
       bottleneck: "",
+      demoLastStep: "",
+      demoMostClickedStep: "",
+      demoStepClicks: "",
     },
   });
 
@@ -1362,7 +1400,12 @@ function WaitlistForm() {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
+        onSubmit={form.handleSubmit((data) =>
+          mutation.mutate({
+            ...data,
+            ...demoEngagement,
+          })
+        )}
         className="relative border border-border bg-card p-6 md:p-8"
         data-testid="form-waitlist"
         noValidate

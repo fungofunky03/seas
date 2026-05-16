@@ -10,6 +10,9 @@ export const waitlist = sqliteTable("waitlist", {
   role: text("role").notNull(),
   installVolume: text("install_volume").notNull(),
   bottleneck: text("bottleneck").notNull().default(""),
+  demoLastStep: text("demo_last_step").notNull().default(""),
+  demoMostClickedStep: text("demo_most_clicked_step").notNull().default(""),
+  demoStepClicks: text("demo_step_clicks").notNull().default(""),
   createdAt: integer("created_at").notNull(),
 });
 
@@ -25,8 +28,11 @@ export const insertWaitlistSchema = createInsertSchema(waitlist)
       "11-25/month",
       "26-50/month",
       "50+/month",
-    ]),
+    ]), 
     bottleneck: z.string().max(2000).default(""),
+    demoLastStep: z.string().max(40).default(""),
+    demoMostClickedStep: z.string().max(40).default(""),
+    demoStepClicks: z.string().max(500).default(""),
   });
 
 export type InsertWaitlist = z.infer<typeof insertWaitlistSchema>;
