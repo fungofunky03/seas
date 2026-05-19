@@ -277,6 +277,16 @@ export default function QuoteGenerator() {
             <Button
               variant="outline"
               className="rounded-none"
+              data-testid="button-open-visualizer"
+              onClick={() => {
+                window.location.hash = "/internal/visualizer";
+              }}
+            >
+              Open House Visualizer
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-none"
               data-testid="button-reset"
               onClick={handleReset}
             >

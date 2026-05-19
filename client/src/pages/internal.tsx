@@ -153,6 +153,17 @@ export default function InternalDashboard() {
               Open Auto Quote Generator
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
+            <Button
+              variant="outline"
+              className="rounded-none"
+              data-testid="link-visualizer"
+              onClick={() => {
+                window.location.hash = "/internal/visualizer";
+              }}
+            >
+              Open House Lighting Visualizer
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
         </section>
       </main>

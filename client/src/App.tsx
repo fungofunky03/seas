@@ -8,6 +8,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import InternalDashboard from "@/pages/internal";
 import QuoteGenerator from "@/pages/quote-generator";
+import HouseVisualizer from "@/pages/visualizer";
 import { useEffect } from "react";
 
 function AppRouter() {
@@ -16,6 +17,7 @@ function AppRouter() {
       <Route path="/" component={Home} />
       <Route path="/internal" component={InternalDashboard} />
       <Route path="/internal/quote-generator" component={QuoteGenerator} />
+      <Route path="/internal/visualizer" component={HouseVisualizer} />
       <Route component={NotFound} />
     </Switch>
   );
