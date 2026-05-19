@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { SeasLogo } from "@/components/seas/Logo";
 import { ArrowRight, BarChart3, Users, Wrench, type LucideIcon } from "lucide-react";
@@ -14,7 +14,7 @@ type ValidationSummary = {
     lastStepCounts: Record<string, number>;
     mostClickedStepCounts: Record<string, number>;
   };
-  updatedAt: number;
+  updatedAt: number | string;
 };
 
 const EMPTY_SUMMARY: ValidationSummary = {
@@ -28,10 +28,11 @@ const EMPTY_SUMMARY: ValidationSummary = {
 
 export default function InternalDashboard() {
   const summaryQuery = useQuery({
-    queryKey: ["/api/internal/validation-summary"],
+    queryKey: ["validation-summary"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/internal/validation-summary");
-      return (await res.json()) as ValidationSummary;
+      const { data, error } = await supabase.rpc("get_validation_summary");
+      if (error) throw error;
+      return data as ValidationSummary;
     },
   });
 

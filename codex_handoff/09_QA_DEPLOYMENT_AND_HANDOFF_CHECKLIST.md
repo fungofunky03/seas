@@ -39,13 +39,36 @@ Internal:
 
 ## Backend checks
 
-Useful endpoints:
+Production backend is Supabase (no Node server is deployed). Verify via the
+Supabase SQL editor or `psql`:
+
+```sql
+select get_waitlist_count();
+select get_validation_summary();
+```
+
+Both RPCs are granted to `anon` and are called directly from the browser.
+
+The legacy Express endpoints below still exist in `server/` for local-only
+reference but are NOT part of the Vercel deployment:
 
 ```bash
 curl http://localhost:5000/api/waitlist/count
 curl http://localhost:5000/api/waitlist/demo-interest
 curl http://localhost:5000/api/internal/validation-summary
 ```
+
+## Deployment target
+
+Production is deployed to **Vercel** as a static Vite build (`dist/public`) via
+`vercel.json`. Required Vercel env vars:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY` (anon publishable key only — never the
+  service-role key)
+
+GitHub Pages, if it still exists for this project, is a static legacy mirror.
+Treat Vercel as the canonical deployment.
 
 ## Packaging instructions
 

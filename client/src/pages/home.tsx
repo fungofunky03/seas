@@ -26,7 +26,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { apiRequest } from "@/lib/queryClient";
+import { supabase } from "@/lib/supabase";
 import { insertWaitlistSchema, type InsertWaitlist } from "@shared/schema";
 import { SeasLogo } from "@/components/seas/Logo";
 import {
@@ -91,7 +91,7 @@ type DemoStepKey = "quote" | "schedule" | "install" | "service";
 type DemoEngagement = {
   demoLastStep: string;
   demoMostClickedStep: string;
-  demoStepClicks: string;
+  demoStepClicks: Record<string, number>;
 };
 
 export default function Home() {
@@ -109,7 +109,7 @@ export default function Home() {
     demoLastStep,
     demoMostClickedStep:
       demoMostClickedStep && demoMostClickedStep[1] > 0 ? demoMostClickedStep[0] : "",
-    demoStepClicks: JSON.stringify(demoClicks),
+    demoStepClicks: demoClicks,
   };
 
   const trackDemoStep = (step: DemoStepKey) => {
@@ -1525,10 +1525,11 @@ function WaitlistSection({ demoEngagement }: { demoEngagement: DemoEngagement })
 
 function WaitlistCount() {
   const countQuery = useQuery({
-    queryKey: ["/api/waitlist/count"],
+    queryKey: ["waitlist", "count"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/waitlist/count");
-      return (await res.json()) as { count: number };
+      const { data, error } = await supabase.rpc("get_waitlist_count");
+      if (error) throw error;
+      return { count: typeof data === "number" ? data : Number(data ?? 0) };
     },
     retry: false,
   });
@@ -1565,14 +1566,25 @@ function WaitlistForm({ demoEngagement }: { demoEngagement: DemoEngagement }) {
       bottleneck: "",
       demoLastStep: "",
       demoMostClickedStep: "",
-      demoStepClicks: "",
+      demoStepClicks: {},
     },
   });
 
   const mutation = useMutation({
     mutationFn: async (data: InsertWaitlist) => {
-      const res = await apiRequest("POST", "/api/waitlist", data);
-      return res.json();
+      const { error } = await supabase.from("waitlist").insert({
+        name: data.name,
+        email: data.email,
+        company: data.company,
+        role: data.role,
+        install_volume: data.installVolume,
+        bottleneck: data.bottleneck,
+        demo_last_step: data.demoLastStep,
+        demo_most_clicked_step: data.demoMostClickedStep,
+        demo_step_clicks: data.demoStepClicks,
+      });
+      if (error) throw error;
+      return { ok: true };
     },
     onSuccess: () => setSubmitted(true),
     onError: () => {
