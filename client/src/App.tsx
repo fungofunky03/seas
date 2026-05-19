@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import InternalDashboard from "@/pages/internal";
+import QuoteGenerator from "@/pages/quote-generator";
 import { useEffect } from "react";
 
 function AppRouter() {
@@ -14,6 +15,7 @@ function AppRouter() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/internal" component={InternalDashboard} />
+      <Route path="/internal/quote-generator" component={QuoteGenerator} />
       <Route component={NotFound} />
     </Switch>
   );

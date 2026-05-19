@@ -135,13 +135,25 @@ export default function InternalDashboard() {
             Build next
           </div>
           <h2 className="mt-3 font-display text-2xl font-black uppercase tracking-tight">
-            First real internal tool recommendation
+            Internal tools
           </h2>
           <p className="mt-3 max-w-3xl text-muted-foreground">
-            Build a lead-review cockpit next: raw waitlist rows behind basic admin protection,
-            fit scoring by role and install volume, demo-interest tags, and a one-click “book
-            validation call” workflow. This page is the safe aggregate layer before that.
+            First shipped internal tool: a job-input → dealer-ready quote, margin math, and
+            crew handoff packet. Use it from the field or the office to keep pricing,
+            scope, and install plans synced before a customer ever sees a number.
           </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Button
+              className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
+              data-testid="link-quote-generator"
+              onClick={() => {
+                window.location.hash = "/internal/quote-generator";
+              }}
+            >
+              Open Auto Quote Generator
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
         </section>
       </main>
     </div>
