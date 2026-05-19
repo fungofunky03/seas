@@ -77,7 +77,8 @@ For handoff to another coding environment:
 1. Exclude `node_modules`.
 2. Include `package.json` and `package-lock.json` if present.
 3. Include `codex_handoff/`.
-4. Include `data.db` if current local validation data is needed.
+4. Include `data.db` only if legacy local Express/SQLite validation data is
+   needed. Production validation data lives in Supabase, not `data.db`.
 5. Include `dist/` only if the recipient needs the built artifact. Otherwise source is enough.
 
 ## Known warnings
