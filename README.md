@@ -1,18 +1,18 @@
 # Raydiant
 
-Raydiant is currently a Vite + React frontend for the SEAS validation landing page and internal prototype tools. Production uses a static Vercel deploy plus Supabase for persistence. A legacy Express + SQLite app still exists under `/home/runner/work/Raydiant/Raydiant/server` for reference and local comparison work.
+Raydiant is currently a Vite + React frontend for the SEAS validation landing page and internal prototype tools. Production uses a static Vercel deploy plus Supabase for persistence. A legacy Express + SQLite app still exists under `./server` for reference and local comparison work.
 
 ## Current project state
 
-- **Production path:** static frontend from `/home/runner/work/Raydiant/Raydiant/client` deployed with `vite build`
-- **Data layer:** Supabase browser client plus shared payload schema in `/home/runner/work/Raydiant/Raydiant/shared/schema.ts`
-- **Legacy/reference path:** Express + better-sqlite3 server in `/home/runner/work/Raydiant/Raydiant/server`
+- **Production path:** static frontend from `./client` deployed with `vite build`
+- **Data layer:** Supabase browser client plus shared payload schema in `./shared/schema.ts`
+- **Legacy/reference path:** Express + better-sqlite3 server in `./server`
 - **Primary product surfaces:** landing page, waitlist flow, internal dashboard, quote generator, house visualizer
 
 ## Repository layout
 
 ```text
-/home/runner/work/Raydiant/Raydiant
+.
 ├── client/src/features         # Feature-oriented frontend modules
 │   ├── landing                 # Marketing/landing experience
 │   ├── waitlist                # Waitlist types and Supabase access
@@ -38,10 +38,10 @@ Raydiant is currently a Vite + React frontend for the SEAS validation landing pa
 
 ## How to work in this repo
 
-1. Add new product work under the matching folder in `/home/runner/work/Raydiant/Raydiant/client/src/features`.
-2. Keep `/home/runner/work/Raydiant/Raydiant/client/src/pages` as route wrappers only.
-3. Put shared payload contracts in `/home/runner/work/Raydiant/Raydiant/shared/schema.ts`.
+1. Add new product work under the matching folder in `./client/src/features`.
+2. Keep `./client/src/pages` as route wrappers only.
+3. Put shared payload contracts in `./shared/schema.ts`.
 4. Keep direct Supabase access in feature-local `api.ts` files instead of page components.
-5. Treat `/home/runner/work/Raydiant/Raydiant/server` as legacy/reference code unless you intentionally need it.
+5. Treat `./server` as legacy/reference code unless you intentionally need it.
 
-See `/home/runner/work/Raydiant/Raydiant/docs/architecture.md` for the architecture decision and contributor guide.
+See `./docs/architecture.md` for the architecture decision and contributor guide.

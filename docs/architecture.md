@@ -4,16 +4,16 @@
 
 Raydiant currently ships as a static Vite frontend deployed to Vercel.
 
-- **Frontend runtime:** React + Wouter in `/home/runner/work/Raydiant/Raydiant/client`
+- **Frontend runtime:** React + Wouter in `./client`
 - **Persistence + aggregation:** Supabase RPCs and table writes from the browser client
-- **Shared contracts:** `/home/runner/work/Raydiant/Raydiant/shared/schema.ts`
-- **Deploy artifact:** `/home/runner/work/Raydiant/Raydiant/dist/public`
+- **Shared contracts:** `./shared/schema.ts`
+- **Deploy artifact:** `./dist/public`
 
 This is the path contributors should optimize for first.
 
 ## Legacy/reference architecture
 
-The repository still contains an older Express + SQLite implementation under `/home/runner/work/Raydiant/Raydiant/server`.
+The repository still contains an older Express + SQLite implementation under `./server`.
 
 - It mirrors waitlist and validation-summary behavior for local/reference use.
 - It is **not** the primary production path.
