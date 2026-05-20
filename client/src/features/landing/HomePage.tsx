@@ -8,10 +8,11 @@ import {
 } from "@/components/ui/accordion";
 import { FAQS, FAQ_SCHEMA } from "@/features/landing/content";
 import { WaitlistSection } from "@/features/waitlist/WaitlistSection";
-import type { DemoStepKey } from "@/features/waitlist/types";
+import type { DemoEngagement, DemoStepKey } from "@/features/waitlist/types";
 import { SeasLogo } from "@/components/seas/Logo";
 import {
   ArrowRight,
+  CheckCircle2,
   Ruler,
   Calendar,
   ClipboardList,
