@@ -19,7 +19,7 @@ Expanded promise:
 The project currently includes:
 
 - A polished landing page for validation.
-- A waitlist form backed by SQLite.
+- A waitlist form backed by Supabase (Postgres).
 - Demo-step interest tracking.
 - A self-contained interactive product demo.
 - A done-for-you automation story animation.
@@ -29,15 +29,19 @@ The project currently includes:
 
 ```bash
 npm install
-npm run dev
+cp .env.example .env.local   # fill in VITE_SUPABASE_URL + VITE_SUPABASE_PUBLISHABLE_KEY
+npm run dev:client
 ```
 
-Production build:
+Production build (static, what Vercel runs):
 
 ```bash
-npm run build
-npm start
+npm run build:client   # or: npm run vercel-build
 ```
+
+> `npm run dev` / `npm run build` start the legacy Express bundle under
+> `server/`. That path is local-dev reference only and is **not** deployed.
+> See `04_TECHNICAL_ARCHITECTURE.md`.
 
 Typecheck:
 
@@ -49,7 +53,7 @@ npx tsc --noEmit
 
 - Do not use `localStorage`, `sessionStorage`, cookies, or IndexedDB. This app may run in sandboxed iframes.
 - Use React state for transient UI state.
-- Use backend API + SQLite for persistence.
+- Use Supabase (Postgres + RPC), called from the browser, for persistence.
 - Routing uses Wouter with hash routes. Internal dashboard route is `/#/internal`.
 - Do not claim partnerships or official integrations with Trimlight, JellyFish, Govee, Oelo, Celebright, EverLights, or similar systems unless actually verified.
 - Keep copy validation-oriented. The product is in early validation, not fully launched.

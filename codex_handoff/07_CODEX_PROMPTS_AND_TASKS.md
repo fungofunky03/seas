@@ -5,7 +5,7 @@ Use these prompts directly in Codex when continuing the project.
 ## Prompt 1 — Orient to the project
 
 ```text
-You are working on the SEAS project, a React/Express/SQLite app for a permanent lighting installer software validation landing page and internal tools. Read codex_handoff/00_READ_ME_FIRST.md through codex_handoff/06_INTERNAL_TOOLS_ROADMAP.md first. Do not make changes yet. Summarize the current architecture, product positioning, and the best next build.
+You are working on the SEAS project: a static Vite/React SPA (deployed to Vercel) backed by Supabase (Postgres + RPC, called directly from the browser) for a permanent lighting installer software validation landing page and internal tools. The Express/SQLite code under server/ is legacy local-dev reference only and is not deployed. Read codex_handoff/00_READ_ME_FIRST.md through codex_handoff/06_INTERNAL_TOOLS_ROADMAP.md first. Do not make changes yet. Summarize the current architecture, product positioning, and the best next build.
 ```
 
 ## Prompt 2 — Build lead-review cockpit
@@ -22,8 +22,8 @@ Build the first internal tool: a lead-review cockpit at /#/internal/leads. Requi
 - Add internal notes.
 - Add CSV export.
 - Do not expose this from public navigation.
-- Add backend endpoints and SQLite fields/tables as needed.
-- Add basic admin protection before exposing raw email data. If full auth is too much, add an ADMIN_TOKEN env variable check and document it.
+- Add Supabase schema/columns and RPCs (via migrations) as needed; raw rows must stay behind RLS, surfaced only through SECURITY DEFINER RPCs.
+- Add real admin protection before exposing raw email/PII data. Because this is a static SPA with no server, gate it with Supabase Auth (authenticated role + RLS policy), not a client-side token. Do not put the service-role key in client code.
 - Use existing design system, app chrome, Signal Red/Ink Black styling.
 - Run npm run build and npx tsc --noEmit.
 ```
@@ -59,7 +59,7 @@ Add a validation call tracker connected to waitlist leads. A lead can have zero 
 - willingnessToPay
 - recommendedModule
 
-Add backend schema/storage/routes and frontend views inside the internal area. Keep styling consistent.
+Add Supabase schema/storage (tables + RLS + RPCs via migrations) and frontend views inside the internal area. Keep styling consistent.
 ```
 
 ## Prompt 5 — Build quote-to-crew MVP prototype
@@ -88,7 +88,7 @@ Then generate:
 - install checklist
 - service record stub
 
-Persist jobs in SQLite. This is not public yet. It should feel like the real SEAS product.
+Persist jobs in Supabase (Postgres), behind RLS so they are not publicly readable. This is not public yet. It should feel like the real SEAS product.
 ```
 
 ## Prompt 6 — QA and cleanup
